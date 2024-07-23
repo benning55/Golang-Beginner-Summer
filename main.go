@@ -3,10 +3,21 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 func main() {
 	incomeExpenseTracker := NewIncomeExpenseTracker()
+	err := LoadData(incomeExpenseTracker)
+	if err != nil {
+		fmt.Println("No previous data found or error loading data. Starting fresh.")
+	}
+
+	go AutoSave(incomeExpenseTracker, 1*time.Minute)
+
+	updateChannel := make(chan string)
+	go RealTimeCalculation(incomeExpenseTracker, updateChannel)
+
 	displayWelcomeMessage()
 
 	for {
@@ -29,6 +40,13 @@ func main() {
 			ExitProgram()
 		default:
 			fmt.Println("Invalid choice. Please try again.")
+		}
+
+		select {
+		case update := <-updateChannel:
+			fmt.Println("\nReal-time update:", update)
+		default:
+			continue
 		}
 	}
 }

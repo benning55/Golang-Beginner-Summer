@@ -19,6 +19,26 @@ func NewIncomeExpenseTracker() *IncomeExpenseTracker {
 	}
 }
 
+func (t *IncomeExpenseTracker) calculateTotalIncome() float64 {
+	var total float64
+	for _, tx := range t.Transactions {
+		if tx.Type == Income {
+			total += tx.Amount
+		}
+	}
+	return total
+}
+
+func (t *IncomeExpenseTracker) calculateTotalExpenses() float64 {
+	var total float64
+	for _, tx := range t.Transactions {
+		if tx.Type == Expense {
+			total += tx.Amount
+		}
+	}
+	return total
+}
+
 func (t *IncomeExpenseTracker) AddIncome() {
 	amount := getAmount("income")
 	income := IncomeTransaction{
@@ -35,6 +55,10 @@ func (t *IncomeExpenseTracker) AddIncome() {
 	}
 	t.TotalIncome += amount
 	t.Transactions = append(t.Transactions, income.Transaction)
+	err = SaveData(t)
+	if err != nil {
+		fmt.Println("Error saving data:", err)
+	}
 	fmt.Printf("Income of $%.2f added successfully.\n", amount)
 }
 
@@ -57,6 +81,10 @@ func (t *IncomeExpenseTracker) AddExpense() {
 	t.TotalExpenses += amount
 	t.Transactions = append(t.Transactions, expense.Transaction)
 	t.ExpenseCategories[category] += amount
+	err = SaveData(t)
+	if err != nil {
+		fmt.Println("Error saving data:", err)
+	}
 	fmt.Printf("Expense of $%.2f in category '%s' added successfully.\n", amount, category)
 }
 
