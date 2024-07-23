@@ -67,6 +67,9 @@ Enhance the Income Expenses Tracker using Go, focusing on File I/O and Concurren
    go run main.go .
 
 ### Final Complete Program
-2. Run the program using:
+1. Run the program using:
    ```sh
    go build .
+2. Run the program using:
+   ```sh
+   ./income-expenses-tracker
