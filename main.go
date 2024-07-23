@@ -5,13 +5,8 @@ import (
 	"os"
 )
 
-var TotalIncome float64
-var TotalExpenses float64
-var Transactions []float64
-var ExpenseCategories map[string]float64
-
 func main() {
-	ExpenseCategories = make(map[string]float64)
+	incomeExpenseTracker := NewIncomeExpenseTracker()
 	displayWelcomeMessage()
 
 	for {
@@ -21,15 +16,15 @@ func main() {
 
 		switch choice {
 		case 1:
-			AddIncome()
+			incomeExpenseTracker.AddIncome()
 		case 2:
-			AddExpense()
+			incomeExpenseTracker.AddExpense()
 		case 3:
-			ViewSummary()
+			incomeExpenseTracker.ViewSummary()
 		case 4:
-			ViewTransactions()
+			incomeExpenseTracker.ViewTransactions()
 		case 5:
-			ViewExpensesByCategory()
+			incomeExpenseTracker.ViewExpensesByCategory()
 		case 6:
 			ExitProgram()
 		default:

@@ -2,64 +2,95 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
-func AddIncome() {
-	fmt.Print("Enter income amount: ")
-	var amount float64
-	fmt.Scan(&amount)
-	if amount >= 0 {
-		TotalIncome += amount
-		fmt.Printf("Income of %.2f added successfully.\n", amount)
-		Transactions = append(Transactions, amount)
-	} else {
-		fmt.Println("Invalid amount. Please enter positive income")
+type IncomeExpenseTracker struct {
+	TotalIncome       float64
+	TotalExpenses     float64
+	Transactions      []Transaction
+	ExpenseCategories map[string]float64
+}
+
+func NewIncomeExpenseTracker() *IncomeExpenseTracker {
+	return &IncomeExpenseTracker{
+		Transactions:      []Transaction{},
+		ExpenseCategories: make(map[string]float64),
 	}
 }
 
-func AddExpense() {
-	fmt.Print("Enter expense amount: ")
-	var amount float64
-	fmt.Scan(&amount)
-	if amount >= 0 {
-		category := getCategory()
-		TotalExpenses += amount
-		fmt.Printf("Expense of %.2f added successfully.\n", amount)
-		Transactions = append(Transactions, 0-amount)
-		ExpenseCategories[category] += amount
-	} else {
-		fmt.Println("Invalid amount. Please enter positive expense")
+func (t *IncomeExpenseTracker) AddIncome() {
+	amount := getAmount("income")
+	income := IncomeTransaction{
+		Transaction: Transaction{
+			Type:   Income,
+			Amount: amount,
+			Date:   time.Now(),
+		},
 	}
+	err := income.Execute()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	t.TotalIncome += amount
+	t.Transactions = append(t.Transactions, income.Transaction)
+	fmt.Printf("Income of $%.2f added successfully.\n", amount)
 }
 
-func ViewSummary() {
+func (t *IncomeExpenseTracker) AddExpense() {
+	amount := getAmount("expense")
+	category := getCategory()
+	expense := ExpenseTransaction{
+		Transaction: Transaction{
+			Type:     Expense,
+			Amount:   amount,
+			Date:     time.Now(),
+			Category: category,
+		},
+	}
+	err := expense.Execute()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	t.TotalExpenses += amount
+	t.Transactions = append(t.Transactions, expense.Transaction)
+	t.ExpenseCategories[category] += amount
+	fmt.Printf("Expense of $%.2f in category '%s' added successfully.\n", amount, category)
+}
+
+func (t *IncomeExpenseTracker) ViewSummary() {
 	fmt.Println("\n--- Financial Summary ---")
-	fmt.Printf("Total Income: $%.2f\n", TotalIncome)
-	fmt.Printf("Total Expenses: $%.2f\n", TotalExpenses)
-	fmt.Printf("Net Savings: $%.2f\n", TotalIncome-TotalExpenses)
+	fmt.Printf("Total Income: $%.2f\n", t.TotalIncome)
+	fmt.Printf("Total Expenses: $%.2f\n", t.TotalExpenses)
+	fmt.Printf("Net Savings: $%.2f\n", t.TotalIncome-t.TotalExpenses)
 }
 
-func ViewTransactions() {
+func (t *IncomeExpenseTracker) ViewTransactions() {
 	fmt.Println("\n--- Financial Transactions ---")
-	for index, amount := range Transactions {
-		if amount >= 0 {
-			fmt.Printf("%d. Income: $%.2f\n", index+1, amount)
+	for index, tx := range t.Transactions {
+		if tx.Type == Income {
+			fmt.Printf("%d. Income: $%.2f\n", index+1, tx.GetAmount())
 		} else {
-			fmt.Printf("%d. Expense: $%.2f\n", index+1, amount)
+			fmt.Printf("%d. Expense: $%.2f\n", index+1, tx.GetAmount())
 		}
 	}
-	fmt.Printf("Net Balance: $%.2f\n", TotalIncome-TotalExpenses)
+	fmt.Printf("Net Balance: $%.2f\n", t.TotalIncome-t.TotalExpenses)
 }
 
-func ViewExpensesByCategory() {
+func (t *IncomeExpenseTracker) ViewExpensesByCategory() {
 	fmt.Println("\n--- Expenses by Category ---")
-	for category, total := range ExpenseCategories {
+	for category, total := range t.ExpenseCategories {
 		fmt.Printf("%s: $%.2f\n", category, total)
 	}
 }
 
-func AddTransaction(amount float64) {
-	Transactions = append(Transactions, amount)
+func getAmount(transactionType string) float64 {
+	var amount float64
+	fmt.Printf("Enter %s amount: ", transactionType)
+	fmt.Scanln(&amount)
+	return amount
 }
 
 func getCategory() string {
