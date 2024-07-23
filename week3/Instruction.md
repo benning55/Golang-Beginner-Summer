@@ -3,53 +3,78 @@
 ## Student Work Instructions
 
 ### Objective
-Enhance the Income Expenses Tracker using Go, focusing on functions and slices.
+Enhance the Income Expenses Tracker using Go, focusing on functions, slices, and maps.
 
 ### Setup
-1. Will have two files named `main.go` and `operations.go`.
+1. You will have two files named `main.go` and `operations.go`.
 
 ### Tasks
 
 1. **Implement Basic Program Structure**
-   - Refactor the `main` function to call functions for different operations.
-   - Use an infinite loop for the menu system.
+   - Use the provided `main` function in `main.go`.
+   - Implement an infinite loop for the menu system.
 
 2. **Create Variables**
-   - Declare `TotalIncome`, `TotalExpenses`, and `Transactions` as global variables.
+   - Use the provided global variables: `TotalIncome`, `TotalExpenses`, `Transactions`, and `ExpenseCategories`.
 
 3. **Implement Menu System**
-   - Use a `for` loop to display the menu continuously.
+   - Use the provided `displayMenu` function.
    - Implement a `switch` statement to handle user choices:
      1. Add Income
      2. Add Expense
      3. View Summary
      4. View Transactions
-     5. Exit
+     5. View Expenses By Category
+     6. Exit
 
 4. **Add Income Functionality**
-   - Create `AddIncome` in `operations.go`.
+   - Implement the `AddIncome` function in `operations.go`.
    - Prompt user for income amount and validate input.
    - Update `TotalIncome` and append to `Transactions`.
 
 5. **Add Expense Functionality**
-   - Create `AddExpense` in `operations.go`.
+   - Implement the `AddExpense` function in `operations.go`.
    - Prompt user for expense amount and validate input.
-   - Update `TotalExpenses` and append as a negative value to `Transactions`.
+   - Use `getCategory` function to get the expense category.
+   - Update `TotalExpenses`, `Transactions`, and `ExpenseCategories`.
 
 6. **Implement Summary View**
-   - Create `ViewSummary` to display total income, total expenses, and net savings.
+   - Implement the `ViewSummary` function to display total income, total expenses, and net savings.
 
 7. **Implement Transaction View**
-   - Create `ViewTransactions` to display all transactions with their type (income or expense).
+   - Implement the `ViewTransactions` function to display all transactions with their type (income or expense).
 
-8. **Implement Exit Option**
-   - Create `ExitProgram` to terminate the program using `os.Exit(0)`.
+8. **Implement Expenses By Category View**
+   - Implement the `ViewExpensesByCategory` function to display expenses grouped by category.
 
-### Hints for Functions
+9. **Implement Exit Option**
+   - Use the provided `ExitProgram` function to terminate the program.
+
+### Key Concepts to Focus On
+
+1. **Functions**: 
+   - Implement and use functions for different operations.
+   - Understand function parameters and return values.
+
+2. **Slices**: 
+   - Use the `Transactions` slice to store transaction history.
+   - Implement operations to append to and iterate over slices.
+
+3. **Maps**: 
+   - Use the `ExpenseCategories` map to categorize expenses.
+   - Implement operations to add to and display data from maps.
+
+4. **Basic Input Validation**: 
+   - Ensure amounts entered are non-negative.
+
+5. **Control Structures**: 
+   - Use `for` loops, `if` statements, and `switch` statements effectively.
+
+### Hints
 
 - Use `fmt.Print` and `fmt.Scan` for user input and output.
-- Use slices to manage transaction history.
-- Ensure to handle invalid inputs gracefully.
+- Remember to update both `Transactions` and `ExpenseCategories` when adding an expense.
+- When displaying transactions, use conditional statements to differentiate between income and expenses.
 
 ### Running the Program
 
