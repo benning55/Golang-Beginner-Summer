@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 func AddIncome() {
@@ -23,9 +22,11 @@ func AddExpense() {
 	var amount float64
 	fmt.Scan(&amount)
 	if amount >= 0 {
+		category := getCategory()
 		TotalExpenses += amount
 		fmt.Printf("Expense of %.2f added successfully.\n", amount)
 		Transactions = append(Transactions, 0-amount)
+		ExpenseCategories[category] += amount
 	} else {
 		fmt.Println("Invalid amount. Please enter positive expense")
 	}
@@ -50,11 +51,34 @@ func ViewTransactions() {
 	fmt.Printf("Net Balance: $%.2f\n", TotalIncome-TotalExpenses)
 }
 
-func ExitProgram() {
-	fmt.Println("Exiting the program. Goodbye!")
-	os.Exit(0)
+func ViewExpensesByCategory() {
+	fmt.Println("\n--- Expenses by Category ---")
+	for category, total := range ExpenseCategories {
+		fmt.Printf("%s: $%.2f\n", category, total)
+	}
 }
 
 func AddTransaction(amount float64) {
 	Transactions = append(Transactions, amount)
+}
+
+func getCategory() string {
+	fmt.Println("\n--- Expense Category ---")
+	fmt.Println("1. Food")
+	fmt.Println("2. Transport")
+	fmt.Println("3. Other")
+	var category int
+	fmt.Print("Enter expense category: ")
+	fmt.Scanln(&category)
+
+	switch category {
+	case 1:
+		return "Food"
+	case 2:
+		return "Transport"
+	case 3:
+		return "Others"
+	}
+
+	return "Unknown"
 }

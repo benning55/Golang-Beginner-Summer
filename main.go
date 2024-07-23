@@ -1,12 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 var TotalIncome float64
 var TotalExpenses float64
 var Transactions []float64
+var ExpenseCategories map[string]float64
 
 func main() {
+	ExpenseCategories = make(map[string]float64)
 	displayWelcomeMessage()
 
 	for {
@@ -24,6 +29,8 @@ func main() {
 		case 4:
 			ViewTransactions()
 		case 5:
+			ViewExpensesByCategory()
+		case 6:
 			ExitProgram()
 		default:
 			fmt.Println("Invalid choice. Please try again.")
@@ -42,7 +49,8 @@ func displayMenu() {
 	fmt.Println("2. Add Expense")
 	fmt.Println("3. View Summary")
 	fmt.Println("4. View Transactions")
-	fmt.Println("5. Exit")
+	fmt.Println("5. View Expenses By Category")
+	fmt.Println("6. Exit")
 }
 
 func getUserChoice() int {
@@ -50,4 +58,9 @@ func getUserChoice() int {
 	fmt.Print("Enter your choice: ")
 	fmt.Scanln(&choice)
 	return choice
+}
+
+func ExitProgram() {
+	fmt.Println("Exiting the program. Goodbye!")
+	os.Exit(0)
 }
